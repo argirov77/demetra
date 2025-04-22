@@ -5,58 +5,91 @@ import Image from 'next/image'
 
 const teamMembers = [
   {
-    photo: '/assets/team/member1.png',
-    name: 'Alex Johnson',
-    role: 'Founder & CEO',
+    photo: '/assets/team/Kateryna.jpg',
+    name: 'Kateryna Shyrynian',
+    role: 'CEO',
+    telegram: 'KS_TRF',
   },
   {
-    photo: '/assets/team/member2.png',
-    name: 'Emily Davis',
-    role: 'Head of Affiliate Marketing',
+    photo: '/assets/team/Yaroslav.jpg',
+    name: 'Yaroslav Strybets',
+    role: 'Head of Affiliates',
+    telegram: 'Yaroslav_DemetraMedia',
   },
   {
-    photo: '/assets/team/member3.png',
-    name: 'Michael Lee',
-    role: 'Senior Web Developer',
+    photo: '/assets/team/Svetlana.jpg',
+    name: 'Svetlana Kryukova',
+    role: 'Head of Accounts',
+    telegram: 'Svetlana_DemetraMedia',
   },
   {
-    photo: '/assets/team/member4.png',
-    name: 'Sophia Martinez',
-    role: 'Marketing Specialist',
+    photo: '/assets/team/Alex.jpg',
+    name: 'Oleksandr Strelchenko',
+    role: 'Affiliate Manager',
+    telegram: 'Alex_DemetraMedia',
+  },
+  {
+    photo: '/assets/team/Anastasia.jpg',
+    name: 'Anastasia Shuliak',
+    role: 'Affiliate Manager',
+    telegram: 'Anastasiia_DemetraMedia',
+  },
+  {
+    photo: '/assets/team/Daniela.jpg',
+    name: 'Daniella Ovcharenko',
+    role: 'Account Manager',
+    telegram: 'Daniella_DemetraMedia',
   },
 ]
 
 export default function Team() {
   return (
-    <section id="team" className="bg-lightGray py-20">
-      <div className="container mx-auto px-4">
+    <section id="team" className="bg-gray-50 py-20">
+      <div className="max-w-6xl mx-auto px-4">
         <motion.h2
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-3xl md:text-4xl font-poppins font-bold text-darkBlue text-center mb-12"
+          className="text-3xl md:text-4xl font-poppins font-bold text-gray-800 text-center mb-12 relative inline-block"
         >
-          Meet Our <span className="text-teal">Team</span>
+          Meet Our{' '}
+          <span className="text-blue-600">Team</span>
+          <span className="absolute bottom-0 left-1/2 w-20 h-1 bg-blue-600 -translate-x-1/2 rounded-full" />
         </motion.h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {teamMembers.map((member, index) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+          {teamMembers.map((member, idx) => (
             <motion.div
-              key={index}
+              key={member.name}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: index * 0.2 }}
-              className="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center"
+              transition={{ duration: 0.6, delay: idx * 0.15 }}
+              className="group bg-white rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-2 transition p-6 flex flex-col items-center text-center"
             >
-              <Image
-                src={member.photo}
-                alt={member.name}
-                width={150}
-                height={150}
-                className="rounded-full mb-4"
-              />
-              <h3 className="text-xl font-bold text-darkBlue">{member.name}</h3>
-              <p className="text-teal">{member.role}</p>
+              {/* blue circle + photo fills it */}
+              <div className="relative w-32 h-32 mb-4 rounded-full overflow-hidden bg-blue-600 ring-4 ring-blue-50">
+                <Image
+                  src={member.photo}
+                  alt={member.name}
+                  fill
+                  sizes="128px"
+                  className="object-cover"
+                />
+              </div>
+
+              <h3 className="text-xl font-semibold text-gray-800">{member.name}</h3>
+              <div className="w-10 h-px bg-gray-200 my-2" />
+              <p className="text-blue-600 font-medium uppercase tracking-wide">
+                {member.role}
+              </p>
+              <a
+                href={`https://t.me/${member.telegram}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 text-gray-500 hover:text-blue-600 transition"
+              >
+                @{member.telegram}
+              </a>
             </motion.div>
           ))}
         </div>

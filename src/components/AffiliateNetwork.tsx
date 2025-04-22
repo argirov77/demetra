@@ -43,18 +43,19 @@ export default function AffiliateNetwork() {
         </motion.h2>
       </div>
 
-      <div className="flex flex-col md:flex-row items-center md:justify-center px-4 gap-4">
+      {/*
+        flex-col по умолчанию (<=lg), flex-row-nowrap на lg+,
+        gap-6 между карточками
+      */}
+      <div className="flex flex-col lg:flex-row lg:flex-nowrap items-center justify-center px-4 gap-6">
         {STEPS.map((step, idx) => (
           <React.Fragment key={step.id}>
-            {/* Шаг */}
             <motion.div
+              className="flex-shrink-0 bg-gray-50 p-6 rounded-xl shadow-md w-full lg:w-64"
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                delay: idx * 1.6,
-                duration: 0.8,
-              }}
-              className="flex-shrink-0 bg-gray-50 p-6 rounded-xl shadow-md w-64 mx-auto"
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={{ duration: 0.8, delay: idx * 0.3 }}
             >
               <div className="mb-4">
                 <Image
@@ -69,29 +70,25 @@ export default function AffiliateNetwork() {
               <p className="text-gray-600 text-sm">{step.desc}</p>
             </motion.div>
 
-            {/* Соединительная линия */}
             {idx < STEPS.length - 1 && (
               <>
-                {/* вертикальная для мобильных */}
+                {/*
+                  соединитель:
+                  - показываем как вертикальную линию для <=lg (lg:hidden)
+                  - как горизонтальную для >=lg (lg:block)
+                */}
                 <motion.div
+                  className="lg:hidden w-px border-l-2 border-dashed border-gray-300 mx-auto"
                   initial={{ height: 0 }}
-                  animate={{ height: 80 }}
-                  transition={{
-                    delay: idx * 1.6 + 0.8,
-                    duration: 0.8,
-                  }}
-                  className="block md:hidden w-px border-l-2 border-dashed border-gray-300"
+                  whileInView={{ height: 60 }}
+                  viewport={{ once: true, amount: 0.5 }}
+                  transition={{ duration: 0.6, delay: idx * 0.3 + 0.2 }}
                 />
-
-                {/* горизонтальная для десктопа */}
                 <motion.div
+                  className="hidden lg:block h-px border-t-2 border-dashed border-gray-300"
                   initial={{ width: 0 }}
                   animate={{ width: 120 }}
-                  transition={{
-                    delay: idx * 1.6 + 0.8,
-                    duration: 0.8,
-                  }}
-                  className="hidden md:block h-px border-t-2 border-dashed border-gray-300"
+                  transition={{ duration: 0.6, delay: idx * 0.3 + 0.2 }}
                 />
               </>
             )}
