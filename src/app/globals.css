@@ -11,7 +11,14 @@
 body {
   font-family: 'Poppins', sans-serif;
 }
+html, body {
+  scroll-behavior: smooth;
+  height: 100%;
+}
 
+body {
+  scroll-snap-type: y mandatory;
+}
 @layer utilities {
   .text-teal {
     @apply text-[#00A9BF];
@@ -28,4 +35,14 @@ body {
   .text-glow {
     text-shadow: 0 2px 6px rgba(0,0,0,0.15);
   }
+}
+html {
+  scroll-behavior: smooth;
+}
+
+section[id] {
+  /* Offset for the header height (approx 3rem = 48px) */
+  scroll-margin-top: 3rem;
+  scroll-snap-align: start;
+  
 }

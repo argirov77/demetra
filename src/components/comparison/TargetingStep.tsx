@@ -1,3 +1,4 @@
+// src/components/comparison/TargetingStep.tsx
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
@@ -18,14 +19,16 @@ export default function TargetingStep({
   results,
 }: SearchStep) {
   const ref = useRef<HTMLDivElement>(null)
+  // Шаг активируется, когда его середина попадает в область просмотра
   const active = useInView(ref, { margin: '-50% 0px -50% 0px' })
+
   const [typed, setTyped] = useState('')
-  const [show, setShow] = useState(false)
+  const [showResults, setShowResults] = useState(false)
 
   useEffect(() => {
     if (!active) {
       setTyped('')
-      setShow(false)
+      setShowResults(false)
       return
     }
     let i = 0
@@ -33,91 +36,118 @@ export default function TargetingStep({
       if (i <= query.length) {
         setTyped(query.slice(0, i))
         i++
-        setTimeout(tick, 100 + Math.random() * 50)
+        setTimeout(tick, 80 + Math.random() * 40)
       } else {
-        setTimeout(() => setShow(true), 500)
+        setTimeout(() => setShowResults(true), 400)
       }
     }
     tick()
   }, [active, query])
 
   return (
-    <div
-      ref={ref}
-      className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8 flex flex-col md:flex-row gap-8"
-    >
-      <BrowserMockup>
-        <TypedSearch query={typed} />
-        <AnimatePresence>
-          {show && (
-            <motion.ul
-              className="mt-4 space-y-2"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              {results.map((r, i) => (
-                <motion.li
-                  key={i}
-                  className={`p-3 rounded-lg shadow ${i === 0 ? 'bg-green-500 text-white' : 'bg-gray-100'}`}
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: i * 0.2 }}
+    <div ref={ref} className="relative overflow-hidden bg-gray-50 py-20">
+      {/* декоративные диагонали */}
+      <div
+        className="absolute inset-0 bg-teal opacity-5 transform rotate-12 origin-top-left"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute inset-0 bg-darkBlue opacity-5 transform -rotate-12 origin-bottom-right"
+        aria-hidden="true"
+      />
+
+      <div className="relative z-10 container mx-auto px-6 lg:px-8 flex flex-col md:flex-row items-start gap-16">
+        {/* «Окошко браузера» с фиксированной шириной */}
+        <motion.div
+          className="w-full max-w-md bg-white rounded-3xl shadow-lg overflow-hidden min-h-[380px]"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 1, ease: 'easeInOut' }}
+        >
+          {/* тулбар */}
+          <div className="h-8 bg-gray-200 flex items-center px-4 space-x-2">
+            <span className="w-3 h-3 bg-red-400 rounded-full" />
+            <span className="w-3 h-3 bg-yellow-400 rounded-full" />
+            <span className="w-3 h-3 bg-green-400 rounded-full" />
+          </div>
+
+          {/* контент */}
+          <div className="p-8 flex flex-col">
+            {/* строка поиска */}
+            <div className="bg-white rounded-full border border-gray-300 flex items-center px-5 py-3 space-x-3 mb-8">
+              <Image
+                src="/assets/services/google-icon.svg"
+                width={20}
+                height={20}
+                alt="Google"
+              />
+              <motion.span
+                key={typed}
+                className="flex-1 text-base font-medium text-gray-800 overflow-hidden whitespace-nowrap"
+                initial={{ width: 0 }}
+                animate={{ width: '100%' }}
+                transition={{ duration: 0.8, ease: 'easeOut' }}
+              >
+                {typed}
+              </motion.span>
+              <motion.span
+                className="animate-pulse text-gray-400"
+                aria-hidden
+              >
+                |
+              </motion.span>
+            </div>
+
+            {/* результаты */}
+            <AnimatePresence>
+              {showResults && (
+                <motion.ul
+                  className="space-y-4"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{ staggerChildren: 0.2, ease: 'easeOut' }}
                 >
-                  {r}
-                </motion.li>
-              ))}
-            </motion.ul>
-          )}
-        </AnimatePresence>
-      </BrowserMockup>
-      <StepText number={2} title={title} description={description} />
-    </div>
-  )
-}
+                  {results.map((res, idx) => (
+                    <motion.li
+                      key={idx}
+                      className={`p-4 rounded-lg shadow-lg ${
+                        idx === 0
+                          ? 'bg-teal text-white'
+                          : 'bg-gray-100 text-gray-800'
+                      }`}
+                      initial={{ scale: 0.9, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ duration: 0.4, delay: idx * 0.15 }}
+                    >
+                      {res}
+                    </motion.li>
+                  ))}
+                </motion.ul>
+              )}
+            </AnimatePresence>
+          </div>
+        </motion.div>
 
-// ——— тут те же вспомогательные компоненты ———
-function BrowserMockup({ children }: { children: React.ReactNode }) {
-  // ... (точно как в IdentifyingStep.tsx)
-  return (
-    <div className="relative flex-1 bg-gray-100 rounded-lg overflow-hidden">
-      <div className="h-8 bg-gray-200 flex items-center px-4 space-x-2">
-        <span className="w-3 h-3 bg-red-400 rounded-full" />
-        <span className="w-3 h-3 bg-yellow-400 rounded-full" />
-        <span className="w-3 h-3 bg-green-400 rounded-full" />
+        {/* текстовая колонка */}
+        <motion.div
+          className="flex-1 max-w-xl space-y-6 text-center md:text-left"
+          initial={{ opacity: 0, x: 40 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 1, ease: 'easeInOut', delay: 0.4 }}
+        >
+          <h3 className="text-3xl font-poppins font-bold text-darkBlue">
+            2. {title}
+          </h3>
+          <p className="text-gray-700 text-lg leading-relaxed">
+            We refine targeted campaigns by analyzing real‑time search intent,
+            ensuring the highest‑intent users land directly on your comparison
+            pages for maximum conversion.
+          </p>
+        </motion.div>
       </div>
-      <div className="p-6">{children}</div>
-    </div>
-  )
-}
-
-function TypedSearch({ query }: { query: string }) {
-  // ... (точно как выше)
-  return (
-    <div className="bg-white border rounded-full flex items-center px-4 py-2 space-x-2">
-      <Image src="/assets/services/google-icon.svg" width={20} height={20} alt="Google" />
-      <motion.span key={query} className="overflow-hidden whitespace-nowrap flex-1">
-        {query}
-      </motion.span>
-      <motion.span className="animate-pulse text-gray-400">|</motion.span>
-    </div>
-  )
-}
-
-function StepText({
-  number,
-  title,
-  description,
-}: {
-  number: number
-  title: string
-  description: string
-}) {
-  // ... (точно как выше)
-  return (
-    <div className="flex-1 space-y-2 text-center md:text-left">
-      <h3 className="text-2xl font-bold">{number}. {title}</h3>
-      <p className="text-gray-700">{description}</p>
     </div>
   )
 }
