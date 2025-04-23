@@ -14,38 +14,43 @@ export default function ComparisonService() {
     <motion.section
       id="comparison"
       className="relative bg-gray-50 py-24 overflow-hidden"
-      initial={{ opacity: 0, y: 50 }}
+      initial={{ opacity: 0, y: 60 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.3 }}
-      transition={{ duration: 0.8 }}
+      viewport={{ once: true, amount: 0.25 }}
+      transition={{ duration: 0.8, ease: 'easeOut' }}
     >
-      {/* контейнер с отступами между секциями */}
-      <div className="container mx-auto px-6 space-y-32">
+      <div className="container mx-auto px-4 space-y-24">
         {/* Заголовок раздела */}
-        <h2 className="text-center font-poppins font-bold text-darkBlue text-4xl md:text-5xl mb-12">
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.8 }}
+          className="text-center font-poppins font-bold text-darkBlue text-4xl md:text-5xl"
+        >
           Comparison <span className="text-teal">Websites</span>
-        </h2>
+        </motion.h2>
 
-        {/* Шаг 1: Identifying */}
+        {/* 1. Identifying */}
         <IdentifyingStep
           title="Identifying"
-          description="We perform an in-depth audit of search behavior to uncover exactly what your potential customers are looking for and why."
-          query="best language learning services"
+          description="We audit search behavior to uncover exactly what your audience is looking for—and why."
+          query="best online language courses"
         />
 
-        {/* Шаг 2: Targeting */}
+        {/* 2. Targeting */}
         <TargetingStep
           title="Targeting"
-          description="We refine targeted campaigns by analyzing real-time search intent, ensuring the highest-intent users land directly on your comparison pages for maximum conversion."
-          query="top 10 language course platforms"
+          description="We target high-intent search segments, driving qualified users straight to your comparison pages."
+          query="top online language learning platforms"
           results={[
-            'Top 10 language course platforms',
-            'Language learning platform reviews',
+            'Top online language platforms',
+            'User reviews & ratings',
             'Best language course websites',
           ]}
         />
 
-        {/* Шаг 3: Connecting */}
+        {/* 3. Connecting */}
         <ConnectingStep />
       </div>
     </motion.section>
