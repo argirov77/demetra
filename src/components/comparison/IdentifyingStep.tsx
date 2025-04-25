@@ -1,3 +1,4 @@
+// src/components/comparison/IdentifyingStep.tsx
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
@@ -10,7 +11,11 @@ interface SearchStep {
   query: string
 }
 
-export default function IdentifyingStep({ title, description, query }: SearchStep) {
+export default function IdentifyingStep({
+  title,
+  description,
+  query,
+}: SearchStep) {
   const ref = useRef<HTMLDivElement>(null)
   const active = useInView(ref, { margin: '-40% 0px -40% 0px' })
 
@@ -28,7 +33,6 @@ export default function IdentifyingStep({ title, description, query }: SearchSte
       if (i <= query.length) {
         setTyped(query.slice(0, i))
         i++
-        // более естественная задержка
         setTimeout(tick, 80 + Math.random() * 80)
       } else {
         setDone(true)
@@ -40,32 +44,50 @@ export default function IdentifyingStep({ title, description, query }: SearchSte
   return (
     <div
       ref={ref}
-      className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8 flex flex-col md:flex-row gap-8"
+      className="relative overflow-hidden bg-white rounded-2xl shadow-lg"
     >
-      <BrowserMockup>
-        <TypedSearch query={typed} done={done} />
-      </BrowserMockup>
-      <StepText number={1} title={title} description={description} />
+      {/* фоновые диагонали */}
+      <div
+        className="absolute inset-0 bg-teal-100 opacity-20 transform -rotate-12 origin-bottom-left pointer-events-none"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute inset-0 bg-darkBlue/10 opacity-10 transform rotate-12 origin-top-right pointer-events-none"
+        aria-hidden="true"
+      />
+
+      <div className="relative z-10 container mx-auto px-6 py-12 flex flex-col md:flex-row items-center gap-8">
+        {/* Окно-браузер */}
+        <BrowserMockup>
+          <TypedSearch query={typed} done={done} />
+        </BrowserMockup>
+
+        {/* Текст */}
+        <div className="flex-1 space-y-4 text-center md:text-left">
+          <h3 className="text-2xl md:text-3xl font-poppins font-bold text-darkBlue">
+            1. {title}
+          </h3>
+          <p className="text-gray-700 text-base md:text-lg">{description}</p>
+        </div>
+      </div>
     </div>
   )
 }
 
-/** Фиксированное по размеру «окно браузера» */
 function BrowserMockup({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative flex-1 max-w-xs min-w-[300px] h-48 bg-gray-100 rounded-lg overflow-hidden shadow-inner">
-      {/* Топ‑бар */}
+    <div className="flex-1 bg-gray-100 rounded-lg overflow-hidden shadow-inner max-w-[360px] w-full">
+      {/* верхняя панель */}
       <div className="h-8 bg-gray-200 flex items-center px-4 space-x-2">
         <span className="w-3 h-3 bg-red-400 rounded-full" />
         <span className="w-3 h-3 bg-yellow-400 rounded-full" />
         <span className="w-3 h-3 bg-green-400 rounded-full" />
       </div>
-      <div className="p-6 flex items-center justify-center">{children}</div>
+      <div className="p-6">{children}</div>
     </div>
   )
 }
 
-/** Поисковая строка с плавной анимацией расширения */
 function TypedSearch({
   query,
   done,
@@ -73,24 +95,17 @@ function TypedSearch({
   query: string
   done: boolean
 }) {
-  // ширина строке всегда фиксирована, чтобы не «прыгать»
-  const containerWidth = 240
   return (
-    <div className="relative">
-      <motion.div
-        className="bg-white border border-gray-300 rounded-full flex items-center pl-3 pr-4 py-2 overflow-hidden"
-        style={{ width: containerWidth }}
-        initial={{ width: 0 }}
-        animate={{ width: containerWidth }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
-      >
+    <div className="relative w-full">
+      {/* зафиксированная ширина, не анимируемая */}
+      <div className="w-full bg-white border border-gray-300 rounded-full flex items-center px-4 py-2 overflow-hidden">
         <Image
           src="/assets/services/google-icon.svg"
           width={20}
           height={20}
           alt="Google"
         />
-        <span className="ml-2 flex-1 text-gray-800 overflow-hidden whitespace-nowrap">
+        <span className="ml-3 flex-1 text-gray-800 truncate">
           {query}
         </span>
         {done && (
@@ -105,25 +120,7 @@ function TypedSearch({
             }}
           />
         )}
-      </motion.div>
-    </div>
-  )
-}
-
-/** Общий текстовый блок шага */
-function StepText({
-  number,
-  title,
-  description,
-}: {
-  number: number
-  title: string
-  description: string
-}) {
-  return (
-    <div className="flex-1 space-y-4 text-center md:text-left">
-      <h3 className="text-2xl font-bold">{number}. {title}</h3>
-      <p className="text-gray-700">{description}</p>
+      </div>
     </div>
   )
 }

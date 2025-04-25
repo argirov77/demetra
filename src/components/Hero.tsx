@@ -23,14 +23,14 @@ export default function Hero() {
 
   return (
     <section className="relative bg-white pt-28 pb-60 overflow-hidden">
-      {/* === SVG-волны в нижнем правом углу, без поворота === */}
+      {/* === «волны» в нижнем правом углу === */}
       <div
         className="absolute bottom-0 right-0 pointer-events-none overflow-hidden"
         style={{
-          width: '140%',      // расширяем узор
+          width: '140%',      // растянули, чтобы волны выходили за границы
           height: '60%',
           minHeight: '200px',
-          transform: 'translateX(15%) translateY(10%)', // поднимаем/сдвигаем в зону видимости
+          transform: 'translateX(15%) translateY(10%)',
         }}
       >
         <svg
@@ -56,7 +56,7 @@ export default function Hero() {
         </svg>
       </div>
 
-      {/* радиальный градиент для контраста текста */}
+      {/* радиальный градиент для повышения читабельности */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -65,7 +65,7 @@ export default function Hero() {
         }}
       />
 
-      {/* === Контент Hero === */}
+      {/* === контент Hero === */}
       <div className="relative z-10 container mx-auto px-4 text-center">
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
@@ -100,17 +100,21 @@ export default function Hero() {
           </div>
         </motion.div>
 
-        <motion.button
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+        {/* Заменили «Get Started» на кнопку партнёра */}
+        <motion.a
+          href="https://aff.demetramedia.com/v2/sign/in"
+          target="_blank"
+          rel="noopener noreferrer"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="bg-teal hover:bg-teal-700 text-white px-12 py-4 rounded-lg font-medium shadow-lg transition"
+          className="inline-block bg-teal hover:bg-teal-700 text-white px-12 py-4 rounded-lg font-medium shadow-lg transition"
         >
-          Get Started
-        </motion.button>
+          Join Affiliate Program
+        </motion.a>
       </div>
 
-      {/* плавный SVG-переход в следующую секцию */}
+      {/* SVG-переход в следующую секцию */}
       <div
         className="absolute bottom-0 left-0 w-full overflow-hidden leading-none pointer-events-none"
         style={{ height: '120px' }}
