@@ -15,26 +15,29 @@ export default function ConnectingStep() {
   const [total, setTotal] = useState(0)
   const nextId = useRef(0)
 
-  // спавним «пузырьки»
+  // Генерируем «пузырьки» покупок
   useEffect(() => {
     if (!active) return
     const timer = setInterval(() => {
       const id = nextId.current++
       const angle = (id % CLIENT_COUNT) * (360 / CLIENT_COUNT)
       const amount = PURCHASE_AMOUNTS[Math.floor(Math.random() * PURCHASE_AMOUNTS.length)]
-      setBubbles(b => [...b, { id, angle, amount }])
+      setBubbles(bs => [...bs, { id, angle, amount }])
       setTotal(t => +(t + amount).toFixed(2))
-      setTimeout(() => setBubbles(b => b.filter(x => x.id !== id)), 1800)
+      // удаляем через 1.8s
+      setTimeout(() => setBubbles(bs => bs.filter(b => b.id !== id)), 1800)
     }, 2000)
     return () => clearInterval(timer)
   }, [active])
 
-  // переводим угол→% позицию
+  // Переводим угол → проценты (с округлением)
   const polarToPercent = (deg: number, radius = 40) => {
     const rad = (deg * Math.PI) / 180
+    const x = 50 + Math.cos(rad) * radius
+    const y = 50 + Math.sin(rad) * radius
     return {
-      left: `${50 + Math.cos(rad) * radius}%`,
-      top: `${50 + Math.sin(rad) * radius}%`,
+      left: `${x.toFixed(2)}%`,
+      top: `${y.toFixed(2)}%`,
     }
   }
 
@@ -43,10 +46,10 @@ export default function ConnectingStep() {
       ref={ref}
       className="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl p-6 md:p-8 flex flex-col md:flex-row gap-8 overflow-hidden"
     >
-      {/* ── Левая: круг клиентов + итого ── */}
+      {/* ── Левая часть: круг клиентов + итог ── */}
       <div className="flex-1 flex flex-col items-center">
         <div className="relative w-full aspect-square max-w-sm">
-          {/* ── Центральный значок, адаптивный размер ── */}
+          {/* центральный значок сайта */}
           <div className="absolute inset-0 flex items-center justify-center z-10">
             <div className="w-1/5 md:w-1/6 lg:w-1/7">
               <Image
@@ -58,8 +61,7 @@ export default function ConnectingStep() {
               />
             </div>
           </div>
-
-          {/* ── Пунктирные линии ── */}
+          {/* пунктирные линии к каждому клиенту */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none">
             {Array.from({ length: CLIENT_COUNT }).map((_, i) => {
               const { left, top } = polarToPercent(i * (360 / CLIENT_COUNT))
@@ -77,8 +79,7 @@ export default function ConnectingStep() {
               )
             })}
           </svg>
-
-          {/* ── Аватары клиентов ── */}
+          {/* иконки клиентов */}
           {Array.from({ length: CLIENT_COUNT }).map((_, i) => {
             const { left, top } = polarToPercent(i * (360 / CLIENT_COUNT))
             return (
@@ -97,8 +98,7 @@ export default function ConnectingStep() {
               </div>
             )
           })}
-
-          {/* ── «Пузырьки» продаж ── */}
+          {/* анимированные «пузырьки» продаж */}
           <AnimatePresence>
             {bubbles.map(({ id, angle, amount }) => {
               const { left, top } = polarToPercent(angle)
@@ -117,8 +117,7 @@ export default function ConnectingStep() {
             })}
           </AnimatePresence>
         </div>
-
-        {/* ── Итог по продажам ── */}
+        {/* итоговая сумма */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={active ? { opacity: 1, y: 0 } : {}}
@@ -129,12 +128,11 @@ export default function ConnectingStep() {
         </motion.div>
       </div>
 
-      {/* ── Правая: текст ── */}
+      {/* ── Правая часть: описание ── */}
       <div className="flex-1 flex flex-col justify-center text-center md:text-left space-y-3">
         <h3 className="text-2xl md:text-3xl font-bold text-darkBlue">3. Connecting</h3>
         <p className="text-gray-600 leading-relaxed">
-          We deliver highly motivated, purchase-ready users straight to your
-          comparison pages, boosting your lead quality and conversion.
+          We deliver highly motivated, purchase-ready users straight to your comparison pages, boosting your lead quality and conversion.
         </p>
       </div>
     </div>
