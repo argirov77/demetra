@@ -102,7 +102,7 @@ export default function Hero() {
 
         {/* Заменили «Get Started» на кнопку партнёра */}
         <motion.a
-          href="https://aff.demetramedia.com/v2/sign/in"
+          href="https://demetramedia.affise.com/v2/sign/up"
           target="_blank"
           rel="noopener noreferrer"
           initial={{ opacity: 0, scale: 0.8 }}
