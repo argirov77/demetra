@@ -151,7 +151,7 @@ export default function AffiliateNetwork() {
         {/* Кнопка приглашения */}
         <motion.div className="mt-12 text-center" variants={cardVariants}>
           <Link
-            href="https://aff.demetramedia.com/v2/sign/in"
+            href="https://demetramedia.affise.com/v2/sign/up"
             target="_blank"
             className="inline-block bg-teal hover:bg-teal-700 text-white px-8 py-3 rounded-full
                        font-medium shadow-lg transition-colors duration-300"
